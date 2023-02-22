@@ -1,134 +1,172 @@
-import { InstanceBase, runEntrypoint } from '@companion-module/base'
+import { InstanceBase, runEntrypoint, TCPHelper, Regex } from '@companion-module/base';
 
-import { actions } from './actions.js'
-import { presets } from './presets.js'
-import { variables } from './variables.js'
-import { feedbacks } from './feedbacks.js'
-import { configs } from './configs';
+import * as actions from './actions.js';
+import * as presets from './presets.js';
+import * as variables from './variables.js';
+import * as feedbacks from './feedbacks.js';
+import * as configs from './configs.js';
+import * as actionFunctions from './actionsFunctions.js';
+import * as utils from './utils.js';
 
-class BoilerPlateInstance extends InstanceBase {
+class CableMattersInstance extends InstanceBase {
 	constructor(internal) {
-		super(internal)
+		super(internal);
 
 		Object.assign(this, {
 			...configs,
 			...actions,
+			...actionFunctions,
 			...presets,
 			...variables,
-			...feedbacks
-		})
+			...feedbacks,
+			...utils,
+		});
 
-		this.updateVariables = updateVariables
+		//this.updateVariables = updateVariables
+
+		this.init(this.getConfigFields());
 	}
 
 	async init(config) {
-		this.config = config
-		this.updateStatus('connecting')
+		this.config = config;
+		this.updateStatus('connecting');
 
-		this.POLLING_INTERVAL = null //used to poll the device every second
-		this.CONNECTED = false //used for friendly notifying of the user that we have not received data yet
+		this.POLLING_INTERVAL = null; //used to poll the device every second
+		this.CONNECTED = false; //used for friendly notifying of the user that we have not received data yet
+		this.OUTPUTS = 4;
+		this.INPUTS = 4;
 
-		this.initConnection()
+		this.DEVICEINFO = {
+			outputs: {},
+			inputs: {},
+			EDID: {},
+		};
 
-		this.initActions()
-		this.initFeedbacks()
-		this.initVariables()
-		this.initPresets()
+		this.initConnection();
 
-		this.updateVariables()
-		this.checkFeedbacks()
+		this.initActions();
+		this.initFeedbacks();
+		this.initVariables();
+		this.initPresets();
+
+		this.updateVariables();
+		this.checkFeedbacks();
 	}
 
 	async destroy() {
-		if (this.udp !== undefined) {
-			this.udp.destroy()
-			delete this.udp
+		if (this.socket !== undefined) {
+			this.socket.destroy();
+			delete this.socket;
 		}
 
 		if (this.POLLING_INTERVAL) {
-			clearInterval(this.POLLING_INTERVAL)
-			this.POLLING_INTERVAL = null
+			clearInterval(this.POLLING_INTERVAL);
+			this.POLLING_INTERVAL = null;
 		}
 	}
 
 	async configUpdated(config) {
-		this.config = config
+		this.config = config;
 
-		this.updateStatus('connecting')
+		this.updateStatus('connecting');
 
 		if (this.POLLING_INTERVAL) {
-			clearInterval(this.POLLING_INTERVAL)
-			this.POLLING_INTERVAL = null
+			clearInterval(this.POLLING_INTERVAL);
+			this.POLLING_INTERVAL = null;
 		}
 
-		this.initConnection()
+		this.initConnection();
 
-		this.initActions()
-		this.initFeedbacks()
-		this.initVariables()
-		this.initPresets()
+		this.initActions();
+		this.initFeedbacks();
+		this.initVariables();
+		this.initPresets();
 
-		this.updateVariables()
-		this.checkFeedbacks()
+		this.updateVariables();
+		this.checkFeedbacks();
 	}
 
 	initVariables() {
-		const variables = this.getVariables()
-		this.setVariableDefinitions(variables)
+		const variables = this.getVariables();
+		this.setVariableDefinitions(variables);
 	}
 
 	initFeedbacks() {
-		const feedbacks = this.getFeedbacks()
-		this.setFeedbackDefinitions(feedbacks)
+		const feedbacks = this.getFeedbacks();
+		this.setFeedbackDefinitions(feedbacks);
 	}
 
 	initPresets() {
-		const presets = this.getPresets()
-		this.setPresetDefinitions(presets)
+		const presets = this.getPresets();
+		this.setPresetDefinitions(presets);
 	}
 
 	initActions() {
-		const actions = this.getActions()
-		this.setActionDefinitions(actions)
+		const actions = this.getActions();
+		this.setActionDefinitions(actions);
 	}
 
 	initConnection() {
 		if (this.config.host !== undefined) {
+			this.socket = new TCPHelper(this.config.host, 23);
 
-			setTimeout(this.checkConnection.bind(this), 10000)
+			setTimeout(this.checkConnection.bind(this), 10000);
 
 			this.socket.on('data', (data) => {
-				this.updateStatus('ok')
+				this.updateStatus('ok');
 
-				this.CONNECTED = true
-				this.setVariableValues({ connection: 'Connected' })
+				this.CONNECTED = true;
+				this.setVariableValues({ connection: 'Connected' });
 				if (!this.POLLING_INTERVAL && this.config.polling) {
-					this.setupInterval()
+					this.setupInterval();
 				}
-			})
+
+				this.processData(data);
+			});
+
+			this.socket.on('error', (err) => {
+				this.CONNECTED = false;
+			});
 		}
 	}
 
 	checkConnection() {
 		if (!this.CONNECTED) {
-			this.updateStatus('connection_failure')
-			this.setVariableValues({ connection: 'Error' })
+			this.updateStatus('connection_failure');
+			this.setVariableValues({ connection: 'Error' });
 		}
 	}
 
 	setupInterval() {
-		this.stopInterval()
+		this.stopInterval();
 
 		if (this.config.polling) {
-			this.POLLING_INTERVAL = setInterval(this.getInformation.bind(this), 1000)
+			this.getInformation();
+			this.POLLING_INTERVAL = setInterval(this.getInformation.bind(this), 300000);
+		}
+	}
+
+	getInformation() {
+		let i = 1;
+		let self = this;
+
+		while (i <= self.OUTPUTS) {
+			loop(i);
+			i++;
+		}
+
+		function loop(i) {
+			setTimeout(function () {
+				self.fetchOutputData(i);
+			}, 500 * i);
 		}
 	}
 
 	stopInterval() {
 		if (this.POLLING_INTERVAL !== null) {
-			clearInterval(this.POLLING_INTERVAL)
-			this.POLLING_INTERVAL = null
+			clearInterval(this.POLLING_INTERVAL);
+			this.POLLING_INTERVAL = null;
 		}
 	}
 }
-runEntrypoint(BoilerPlateInstance, [])
+runEntrypoint(CableMattersInstance, []);

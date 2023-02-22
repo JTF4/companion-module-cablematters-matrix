@@ -1,8 +1,8 @@
 {
-	"id": "timemachines-clock",
-	"name": "timemachines-clock",
-	"shortname": "tm-clock",
-	"description": "TimeMachines Clocks",
+	"id": "cablematters-4x4matrix",
+	"name": "cablematters-4x4matrix",
+	"shortname": "cm-matrix",
+	"description": "Cable Matters 4x4 HDMI Matrix",
 	"version": "1.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-timemachines-clock.git",
@@ -20,12 +20,7 @@
 		"apiVersion": "0.0.0",
 		"entrypoint": "../src/index.js"
 	},
-	"manufacturer": "TimeMachines",
-	"products": [
-		"Clock"
-	],
-	"keywords": [
-		"clock",
-		"timer"
-	]
+	"manufacturer": "Cable Matters",
+	"products": ["Matrix"],
+	"keywords": ["matrix", "hdmi", "4x4", "Cable Matters"]
 }
