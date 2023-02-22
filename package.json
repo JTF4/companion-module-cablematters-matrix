@@ -1,5 +1,5 @@
 {
-	"name": "cablematters-4x4matrix",
+	"name": "cablematters-matrix",
 	"version": "1.0.0",
 	"main": "src/index.js",
 	"type": "module",
@@ -10,7 +10,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/jtf4/companion-module-cablematters-4x4matrix"
+		"url": "git+https://github.com/jtf4/companion-module-cablematters-matrix"
 	},
 	"dependencies": {
 		"@companion-module/base": "~1.1.1"

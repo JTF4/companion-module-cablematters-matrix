@@ -1,8 +1,8 @@
 {
-	"id": "cablematters-4x4matrix",
-	"name": "cablematters-4x4matrix",
+	"id": "cablematters-matrix",
+	"name": "cablematters-matrix",
 	"shortname": "cm-matrix",
-	"description": "Cable Matters 4x4 HDMI Matrix",
+	"description": "Cable Matters HDMI Matrix",
 	"version": "1.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-timemachines-clock.git",

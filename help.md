@@ -1,4 +1,4 @@
-# companion-module-cablematters-4x4matrix
+# companion-module-cablematters-matrix
 
 This module allows you to control the Cable Matters 4x4 HDMI Matrix.
 
