@@ -1,1 +1,1 @@
-# companion-module-cablematters-4x4matrix
+# companion-module-cablematters-matrix

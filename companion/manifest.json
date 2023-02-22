@@ -5,8 +5,8 @@
 	"description": "Cable Matters HDMI Matrix",
 	"version": "1.0.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-timemachines-clock.git",
-	"bugs": "https://github.com/bitfocus/companion-module-timemachines-clock/issues",
+	"repository": "git+https://github.com/bitfocus/companion-module-cablematters-hdmimatrix.git",
+	"bugs": "https://github.com/bitfocus/companion-module-cablematters-hdmimatrix/issues",
 	"maintainers": [
 		{
 			"name": "David Stevens",
