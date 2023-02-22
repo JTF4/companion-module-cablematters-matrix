@@ -1,43 +1,28 @@
-# TimeMachines Clocks
+# companion-module-cablematters-matrix
 
-This module controls clocks from [TimeMachines](https://timemachinescorp.com).
+This module allows you to control the Cable Matters 4x4 HDMI Matrix.
 
-### Actions
+Once connected the module polls the video routes and makes them avalible through variables and feedbacks.
 
-- Set CountUp Timer Mode
-- Start/Pause/Reset Count Up Timer
-- Set CountDown Timer Mode
-- Start/Pause/Reset Count Down Timer
-- Show Time Of Day
-- Set Count Up Timer While Running
-- Set Count Down Timer While Running
-- Execute Stored Program
-- Relay Close
-- Set Display Brightness
-- Set Display Colors
+## Avalible Actions
 
-### Variables
+- Set Cross Point
+  - Allows you to send an input to an output.
+- Set Beep
+  - Allows you to turn the beep function on and off.
 
-- Model
-- Unit Name
-- Firmware Version
-- Current Display on Clock (Current Time or Remaining Time on Timer)
-- Display Mode (Time of Day, Count Up, Count Down)
-- Timer State
+## Avalible Variables
 
-### Feedbacks
+- Output 1
+  - Shows output 1's source.
+- Output 2
+  - Shows output 2's source.
+- Output 3
+  - Shows output 3's source.
+- Output 4
+  - Shows output 4's source.
 
-- Dispaly Mode (Time of Day, Count Up, Count Down)
-- Timer State (Count Up, Count Down) (Running, Stopped)
-- Remaining Seconds on Timer
+## Avalible Feedbacks
 
-### Presets
-
-- Clock Dispaly
-- Clock Mode
-- Start/Pause Count Up Timer
-- Start/Pause Count Down Timer
-- Execute Stored Programs
-- Relay Control
-- Display Brightness
-- Display Colors
+- Crosspoint Route
+  - Shows when the desired cross point route is active

@@ -35,6 +35,7 @@ class CableMattersInstance extends InstanceBase {
 		this.CONNECTED = false; //used for friendly notifying of the user that we have not received data yet
 		this.OUTPUTS = 4;
 		this.INPUTS = 4;
+		this.GETTING_INFO = false;
 
 		this.DEVICEINFO = {
 			outputs: {},
@@ -142,23 +143,33 @@ class CableMattersInstance extends InstanceBase {
 
 		if (this.config.polling) {
 			this.getInformation();
-			this.POLLING_INTERVAL = setInterval(this.getInformation.bind(this), 300000);
+			if(this.config.enableCustomPollRate) {
+				this.POLLING_INTERVAL = setInterval(this.getInformation.bind(this), parseInt(this.config.customPollRate));
+			} else {
+				this.POLLING_INTERVAL = setInterval(this.getInformation.bind(this), 300000);
+			}
 		}
 	}
 
 	getInformation() {
-		let i = 1;
-		let self = this;
+		if(this.GETTING_INFO == false) {
+			this.GETTING_INFO = true;
 
-		while (i <= self.OUTPUTS) {
-			loop(i);
-			i++;
-		}
+			let i = 1;
+			let self = this;
+	
+			while (i <= self.OUTPUTS) {
+				loop(i);
+				i++;
+			}
+	
+			function loop(i) {
+				setTimeout(function () {
+					self.fetchOutputData(i);
+				}, 500 * i);
+			}
 
-		function loop(i) {
-			setTimeout(function () {
-				self.fetchOutputData(i);
-			}, 500 * i);
+			this.GETTING_INFO = false;
 		}
 	}
 

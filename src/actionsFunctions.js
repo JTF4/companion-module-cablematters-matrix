@@ -15,7 +15,7 @@ export function setBeep(bool) {
 
 	this.socket.send(buf);
 
-	this.getInformation();
+	//this.getInformation();
 }
 
 export function setCrosspoint(output, input) {

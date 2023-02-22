@@ -52,5 +52,53 @@ export function getPresets() {
 		}
 	}
 
+	presets[`beepOn`] = {
+		type: 'button',
+		category: 'Settings',
+		name: 'Beep On',
+		style: {
+			style: 'text',
+			text: `Beep On`,
+			size: '14',
+			color: ColorWhite,
+			bgcolor: ColorBlack,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'enableBeep',
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	};
+
+	presets[`beepOf`] = {
+		type: 'button',
+		category: 'Settings',
+		name: 'Beep Off',
+		style: {
+			style: 'text',
+			text: `Beep Off`,
+			size: '14',
+			color: ColorWhite,
+			bgcolor: ColorBlack,
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'disableBeep',
+					},
+				],
+				up: [],
+			},
+		],
+		feedbacks: [],
+	};
+
 	return presets;
 }
